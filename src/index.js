@@ -1,8 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import giraffe from './images/giraffe1.jpg'
 import notGiraffe from './images/notgiraffe1.jpg'
+
+class Button extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+    <button>{this.props.name}</button>
+    );
+  }
+
+}
 
 class Image extends React.Component {
   constructor(props) {
@@ -25,8 +38,13 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Image image={giraffe} />
-        <Image image={notGiraffe} />
+        <div>
+          <Image image={giraffe}/>
+          <Image image={notGiraffe}/>
+        </div>
+        <Button name="Left"/>
+        <Button name="No Giraffes"/>
+        <Button name="Right"/>
       </div>
     );
   }
