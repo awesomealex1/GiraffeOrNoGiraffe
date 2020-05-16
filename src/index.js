@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import giraffe from './images/giraffe1.jpg'
-import notGiraffe from './images/notgiraffe1.jpg'
+import giraffe from './images/giraffes/giraffe1.jpg'
+import notGiraffe from './images/notGiraffes/notgiraffe1.jpg'
 
 class Counter extends React.Component {
   constructor(props) {
@@ -77,6 +77,11 @@ class App extends React.Component {
     } else {
       this.count = 0;
     }
+  }
+
+  randomeImage(giraffe) {
+    const giraffeFolderName = "giraffes";
+    const notGiraffeFolderName = "notGiraffes";
   }
 
   render() {
