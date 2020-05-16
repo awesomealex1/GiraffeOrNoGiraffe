@@ -61,10 +61,11 @@ class App extends React.Component {
     super(props);
     this.count = 0;
     this.state = {
-      giraffe: '',
-      notGiraffe: '',
-      poop: 9
+      leftImage: '',
+      rightImage: '',
     };
+    this.left = false; //Whether giraffe is left
+    this.right = false;  //Wether giraffe is right
     this.handleButtonClick = this.handleButtonClick.bind(this);
     this.counterElement = React.createRef();
     this.giraffes = this.importAll(require.context('./images/giraffes/', false, /\.(png|jpe?g|svg)$/));
@@ -72,9 +73,20 @@ class App extends React.Component {
     this.updateImages = this.updateImages.bind(this);
   }
 
-  handleButtonClick(shouldBeGiraffe) {
-    this.counterElement.current.changeChildCounter(!shouldBeGiraffe);
-    this.changeParentCounter(!shouldBeGiraffe);
+  handleButtonClick(buttonName) {
+
+    let reset = true;
+
+    if (this.left && buttonName === 'Left') {
+      reset = false;
+    } else if (this.right && buttonName === 'Right') {
+      reset = false;
+    } else if (!this.right && !this.left && buttonName === 'None') {
+      reset = false;
+    }
+
+    this.counterElement.current.changeChildCounter(reset);
+    this.changeParentCounter(reset);
     this.updateImages();
   }
 
@@ -95,25 +107,37 @@ class App extends React.Component {
  }
 
   updateImages() {
-    let giraffeIndex = Math.floor(Math.random() * this.giraffes.length);
-    let notGiraffeIndex = Math.floor(Math.random() * this.notGiraffes.length);
-    this.setState({
-      giraffe: this.giraffes[giraffeIndex],
-      notGiraffe: this.notGiraffes[notGiraffeIndex],
-    });
+    const giraffeLoc = Math.floor(Math.random() * 2);
+    const giraffeIndex = Math.floor(Math.random() * this.giraffes.length);
+    const notGiraffeIndex = Math.floor(Math.random() * this.notGiraffes.length);
+    if (giraffeLoc === 0){
+      this.left = true;
+      this.right = false;
+      this.setState({
+        leftImage: this.giraffes[giraffeIndex],
+        rightImage: this.notGiraffes[notGiraffeIndex],
+      });
+    } else {
+      this.right = true;
+      this.left = false;
+      this.setState({
+        rightImage: this.giraffes[giraffeIndex],
+        leftImage: this.notGiraffes[notGiraffeIndex],
+      });
+    }
   }
 
   render() {
     return (
       <div>
         <div>
-          <Image image={this.state.giraffe} isGiraffe={true}/>
-          <Image image={this.state.notGiraffe} isGiraffe={false}/>
+          <Image image={this.state.leftImage}/>
+          <Image image={this.state.rightImage}/>
         </div>
         <div>
-          <Button name="Left" onClick={() => this.handleButtonClick(true)}/>
-          <Button name="No Giraffes"/>
-          <Button name="Right" onClick={() => this.handleButtonClick(false)}/>
+          <Button name="Left" onClick={() => this.handleButtonClick("Left")}/>
+          <Button name="No Giraffes" onClick={() => this.handleButtonClick("None")}/>
+          <Button name="Right" onClick={() => this.handleButtonClick("Right")}/>
         </div>
         <Counter ref={this.counterElement}/>
       </div>
