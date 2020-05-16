@@ -23,7 +23,7 @@ class Counter extends React.Component {
 
   render(){
     return(
-      <p>{this.state.count}</p>
+      <p>Score: {this.state.count}</p>
     );
   }
 
@@ -130,7 +130,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <div>
+        <div class="images-div">
           <Image image={this.state.leftImage}/>
           <Image image={this.state.rightImage}/>
         </div>

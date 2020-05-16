@@ -1,13 +1,42 @@
-img {
-    width: 400px;
-    height: 400px;
-    margin: 20px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+$color1: white;
+$color2: rgb(150, 149, 149);
 
 body {
+    font-family: 'Jost';
     text-align: center;
+    background-color: $color1;
+}
+
+img {
+    width: 500px;
+    height: 500px;
+    margin: 20px;
+    border: 1px solid $color2;
+    border-radius: 3px;
+    transition: filter 0.2s;
+}
+
+img:hover {
+    filter: brightness(95%);
 }
 
 button {
     margin: 20px;
+    border-radius: 2px;
+    border: 1px solid $color2;
+    padding: 10px 20px;
+    background-color: $color1;
+    font-size: 16px;
+    font-weight: normal;
+    transition: background-color 0.15s;
+}
+
+button:hover {
+    background-color: $color2;
+}
+
+.images-div {
+    margin-top: 30px;
 }
