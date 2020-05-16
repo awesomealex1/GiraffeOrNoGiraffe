@@ -10,7 +10,7 @@ class Counter extends React.Component {
     this.state = {count: 0};
   }
 
-  changeCounter(reset) {
+  changeChildCounter(reset) {
     console.log(reset);
     if (!reset) {
       this.setState((state) => ({
@@ -61,25 +61,21 @@ class Image extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {count:0};
+    this.count = 0;
     this.handleButtonClick = this.handleButtonClick.bind(this);
     this.counterElement = React.createRef();
   }
 
   handleButtonClick(shouldBeGiraffe) {
-    this.counterElement.current.changeCounter(!shouldBeGiraffe);
-    this.changeCounter(!shouldBeGiraffe);
+    this.counterElement.current.changeChildCounter(!shouldBeGiraffe);
+    this.changeParentCounter(!shouldBeGiraffe);
   }
 
-  changeCounter(reset) {
+  changeParentCounter(reset) {
     if (!reset) {
-      this.setState((state) => ({
-        count: state.count + 1
-      }));
+      this.count++;
     } else {
-      this.setState((state) => ({
-        count: 0
-      }));
+      this.count = 0;
     }
   }
 
