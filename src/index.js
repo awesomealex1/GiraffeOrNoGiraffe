@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import giraffe from './images/giraffes/giraffe1.jpg'
-import notGiraffe from './images/notGiraffes/notgiraffe1.jpg'
 
 class Counter extends React.Component {
   constructor(props) {
@@ -62,13 +60,22 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.count = 0;
+    this.state = {
+      giraffe: '',
+      notGiraffe: '',
+      poop: 9
+    };
     this.handleButtonClick = this.handleButtonClick.bind(this);
     this.counterElement = React.createRef();
+    this.giraffes = this.importAll(require.context('./images/giraffes/', false, /\.(png|jpe?g|svg)$/));
+    this.notGiraffes = this.importAll(require.context('./images/notGiraffes/', false, /\.(png|jpe?g|svg)$/));
+    this.updateImages = this.updateImages.bind(this);
   }
 
   handleButtonClick(shouldBeGiraffe) {
     this.counterElement.current.changeChildCounter(!shouldBeGiraffe);
     this.changeParentCounter(!shouldBeGiraffe);
+    this.updateImages();
   }
 
   changeParentCounter(reset) {
@@ -79,17 +86,29 @@ class App extends React.Component {
     }
   }
 
-  randomeImage(giraffe) {
-    const giraffeFolderName = "giraffes";
-    const notGiraffeFolderName = "notGiraffes";
+  importAll(r) {
+    return r.keys().map(r);
+  }
+
+  componentDidMount() {
+    this.updateImages();
+ }
+
+  updateImages() {
+    let giraffeIndex = Math.floor(Math.random() * this.giraffes.length);
+    let notGiraffeIndex = Math.floor(Math.random() * this.notGiraffes.length);
+    this.setState({
+      giraffe: this.giraffes[giraffeIndex],
+      notGiraffe: this.notGiraffes[notGiraffeIndex],
+    });
   }
 
   render() {
     return (
       <div>
         <div>
-          <Image image={giraffe} isGiraffe={true}/>
-          <Image image={notGiraffe} isGiraffe={false}/>
+          <Image image={this.state.giraffe} isGiraffe={true}/>
+          <Image image={this.state.notGiraffe} isGiraffe={false}/>
         </div>
         <div>
           <Button name="Left" onClick={() => this.handleButtonClick(true)}/>
