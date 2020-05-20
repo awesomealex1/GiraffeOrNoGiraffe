@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
+import firebase from 'firebase';
+import config from './components/Firebase/config'
 
 class Counter extends React.Component {
   constructor(props) {
@@ -9,7 +11,6 @@ class Counter extends React.Component {
   }
 
   changeChildCounter(reset) {
-    console.log(reset);
     if (!reset) {
       this.setState((state) => ({
         count: state.count + 1
@@ -50,7 +51,7 @@ class Image extends React.Component {
   render() {
     const alt = "This is an image of either a giraffe or not a giraffe";
     return (
-      <img src={this.props.image} alt={alt}></img>
+      <img src={this.props.image} alt={alt} onClick={this.props.onClick}></img>
     );
   }
 
@@ -59,6 +60,7 @@ class Image extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
+    firebase.initializeApp(config);
     this.count = 0;
     this.state = {
       leftImage: '',
@@ -71,6 +73,17 @@ class App extends React.Component {
     this.giraffes = this.importAll(require.context('./images/giraffes/', false, /\.(png|jpe?g|svg)$/));
     this.notGiraffes = this.importAll(require.context('./images/notGiraffes/', false, /\.(png|jpe?g|svg)$/));
     this.updateImages = this.updateImages.bind(this);
+  }
+
+  writePlayerScore(name, score) {
+    firebase.database().ref('players/'+name).set(score);
+  }
+
+  logPlayerScore(name) {
+    const ref = firebase.database().ref('players/'+name);
+    ref.once("value").then(function(snapshot){
+      console.log(name + ": " + snapshot.val());
+    });
   }
 
   handleButtonClick(buttonName) {
@@ -94,6 +107,8 @@ class App extends React.Component {
     if (!reset) {
       this.count++;
     } else {
+      this.writePlayerScore("A",this.count);
+      this.logPlayerScore("A");
       this.count = 0;
     }
   }
@@ -130,9 +145,10 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <div class="images-div">
-          <Image image={this.state.leftImage}/>
-          <Image image={this.state.rightImage}/>
+        <h1>Giraffe Or No Giraffe</h1>
+        <div className="images-div">
+          <Image image={this.state.leftImage} onClick={() => this.handleButtonClick("Left")}/>
+          <Image image={this.state.rightImage} onClick={() => this.handleButtonClick("Right")}/>
         </div>
         <div>
           <Button name="Left" onClick={() => this.handleButtonClick("Left")}/>
@@ -141,6 +157,7 @@ class App extends React.Component {
         </div>
         <Counter ref={this.counterElement}/>
       </div>
+      
     );
   }
 
