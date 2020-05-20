@@ -4,6 +4,21 @@ import './index.scss';
 import firebase from 'firebase';
 import config from './components/Firebase/config'
 
+class LeaderboardEntry extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return(
+      <div className="leaderboardEntry">
+        <p>{this.props.name}: {this.props.score}</p>
+      </div>
+    );
+  }
+
+}
+
 class Counter extends React.Component {
   constructor(props) {
     super(props);
@@ -22,7 +37,7 @@ class Counter extends React.Component {
     }
   }
 
-  render(){
+  render() {
     return(
       <p>Score: {this.state.count}</p>
     );
@@ -65,6 +80,7 @@ class App extends React.Component {
     this.state = {
       leftImage: '',
       rightImage: '',
+      leaderboard: [],
     };
     this.left = false; //Whether giraffe is left
     this.right = false;  //Wether giraffe is right
@@ -119,7 +135,15 @@ class App extends React.Component {
 
   componentDidMount() {
     this.updateImages();
- }
+    this.updateLeaderboard();
+  }
+
+  updateLeaderboard() {
+    const maxEntries = 10;
+    this.setState({
+      leaderboard: [["A", 9], ["B", 7]],
+    });
+  }
 
   updateImages() {
     const giraffeLoc = Math.floor(Math.random() * 2);
@@ -156,6 +180,11 @@ class App extends React.Component {
           <Button name="Right" onClick={() => this.handleButtonClick("Right")}/>
         </div>
         <Counter ref={this.counterElement}/>
+        <div className="leaderboard">
+          {this.state.leaderboard.map((value,index) => {
+            return <LeaderboardEntry name={value[0]} score={value[1]}/>
+          })}
+        </div>
       </div>
       
     );
