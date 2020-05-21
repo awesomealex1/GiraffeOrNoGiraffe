@@ -95,11 +95,17 @@ class App extends React.Component {
     firebase.database().ref('players/'+name).set(score);
   }
 
-  logPlayerScore(name) {
-    const ref = firebase.database().ref('players/'+name);
-    ref.once("value").then(function(snapshot){
-      console.log(name + ": " + snapshot.val());
-    });
+  updateLeaderboard() {
+    this.loadPlayerScores().then(snapshot => {
+      this.updateLeaderboardState(snapshot.val());
+    }, function(error){
+      console.log(error);
+    })
+  }
+
+  loadPlayerScores() {
+    const ref = firebase.database().ref('players');
+    return ref.once("value");
   }
 
   handleButtonClick(buttonName) {
@@ -123,8 +129,8 @@ class App extends React.Component {
     if (!reset) {
       this.count++;
     } else {
-      this.writePlayerScore("A",this.count);
-      this.logPlayerScore("A");
+      this.writePlayerScore("B",this.count);
+      this.updateLeaderboard();
       this.count = 0;
     }
   }
@@ -138,10 +144,21 @@ class App extends React.Component {
     this.updateLeaderboard();
   }
 
-  updateLeaderboard() {
-    const maxEntries = 10;
+  updateLeaderboardState(leaderScores) {
+    
+    const names = Object.keys(leaderScores);
+    const scores = Object.values(leaderScores);
+
+    const numberOfPlayers = names.length;
+
+    var leaderboardArray = []
+
+    for (var i = 0; i < numberOfPlayers; i++) {
+      leaderboardArray.push([names[i],scores[i]]);
+    }
+
     this.setState({
-      leaderboard: [["A", 9], ["B", 7]],
+      leaderboard: leaderboardArray,
     });
   }
 
