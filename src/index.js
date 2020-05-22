@@ -11,8 +11,8 @@ class Username extends React.Component {
 
   render() {
     return(
-      <div>
-        <h2>Hello </h2><input onChange={(event) => this.props.handleChange(event.target.value)} placeholder="Enter name"></input>
+      <div className="username">
+        <h2>Hello </h2><input onChange={(event) => this.props.handleChange(event.target.value)} placeholder="Enter name" maxLength="16"></input>
       </div>
     );
   }
