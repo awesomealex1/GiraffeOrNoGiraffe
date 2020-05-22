@@ -12,7 +12,7 @@ class Username extends React.Component {
   render() {
     return(
       <div className="username">
-        <h2>Hello </h2><input onChange={(event) => this.props.handleChange(event.target.value)} placeholder="Enter name" maxLength="16"></input>
+        <h2>Hello </h2><input onChange={(event) => this.props.handleChange(event.target.value)} placeholder="Enter name" maxLength="13"></input>
       </div>
     );
   }
@@ -222,6 +222,7 @@ class App extends React.Component {
         </div>
         <Counter ref={this.counterElement}/>
         <div className="leaderboard">
+          <h2>Leaderboard: </h2>
           {this.state.leaderboard.map((value,index) => {
             return <LeaderboardEntry name={value[0]} score={value[1]}/>
           })}
