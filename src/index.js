@@ -4,6 +4,21 @@ import './index.scss';
 import firebase from 'firebase';
 import config from './components/Firebase/config'
 
+class Username extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return(
+      <div>
+        <h2>Hello </h2><input onChange={(event) => this.props.handleChange(event.target.value)} placeholder="Enter name"></input>
+      </div>
+    );
+  }
+
+}
+
 class LeaderboardEntry extends React.Component {
   constructor(props) {
     super(props);
@@ -81,6 +96,7 @@ class App extends React.Component {
       leftImage: '',
       rightImage: '',
       leaderboard: [],
+      username: "Anonymous",
     };
     this.left = false; //Whether giraffe is left
     this.right = false;  //Wether giraffe is right
@@ -89,6 +105,13 @@ class App extends React.Component {
     this.giraffes = this.importAll(require.context('./images/giraffes/', false, /\.(png|jpe?g|svg)$/));
     this.notGiraffes = this.importAll(require.context('./images/notGiraffes/', false, /\.(png|jpe?g|svg)$/));
     this.updateImages = this.updateImages.bind(this);
+    this.changePlayerName = this.changePlayerName.bind(this);
+  }
+
+  changePlayerName(name) {
+    this.setState({
+      username: name,
+    });
   }
 
   writePlayerScore(name, score) {
@@ -129,7 +152,7 @@ class App extends React.Component {
     if (!reset) {
       this.count++;
     } else {
-      this.writePlayerScore("B",this.count);
+      this.writePlayerScore(this.state.username,this.count);
       this.updateLeaderboard();
       this.count = 0;
     }
@@ -187,6 +210,7 @@ class App extends React.Component {
     return (
       <div>
         <h1>Giraffe Or No Giraffe</h1>
+        <Username handleChange={this.changePlayerName}/>
         <div className="images-div">
           <Image image={this.state.leftImage} onClick={() => this.handleButtonClick("Left")}/>
           <Image image={this.state.rightImage} onClick={() => this.handleButtonClick("Right")}/>
