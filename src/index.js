@@ -115,9 +115,10 @@ class App extends React.Component {
   }
 
   writePlayerHighscore(name, score) {
-    this.loadPlayerScores("/" + name).then(snapshot => {
+    name = name.split('/').join('');
+    this.loadPlayerScores(name).then(snapshot => {
       if (snapshot.val() < score) {
-        firebase.database().ref('players/'+name).set(score);
+        firebase.database().ref('players').child(name).set(score);
       }
     }, function(error){
       console.log(error);
@@ -135,7 +136,12 @@ class App extends React.Component {
   }
 
   loadPlayerScores(name="") {
-    const ref = firebase.database().ref('players'+name);
+    var ref = "";
+    if (name != "") {
+      ref = firebase.database().ref('players').child(name);
+    } else {
+      ref = firebase.database().ref('players');
+    }
     return ref.once("value");
   }
 
@@ -162,6 +168,7 @@ class App extends React.Component {
     } else {
       this.writePlayerHighscore(this.state.username,this.count);
       this.updateLeaderboard();
+      
       this.count = 0;
     }
   }
