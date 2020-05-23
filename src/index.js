@@ -114,20 +114,28 @@ class App extends React.Component {
     });
   }
 
-  writePlayerScore(name, score) {
-    firebase.database().ref('players/'+name).set(score);
-  }
-
-  updateLeaderboard() {
-    this.loadPlayerScores().then(snapshot => {
-      this.updateLeaderboardState(snapshot.val());
+  writePlayerHighscore(name, score) {
+    this.loadPlayerScores("/" + name).then(snapshot => {
+      if (snapshot.val() < score) {
+        firebase.database().ref('players/'+name).set(score);
+      }
     }, function(error){
       console.log(error);
     })
   }
 
-  loadPlayerScores() {
-    const ref = firebase.database().ref('players');
+  updateLeaderboard() {
+    this.loadPlayerScores().then(snapshot => {
+      if (snapshot.val() != null) {
+        this.updateLeaderboardState(snapshot.val());
+      }
+    }, function(error){
+      console.log(error);
+    })
+  }
+
+  loadPlayerScores(name="") {
+    const ref = firebase.database().ref('players'+name);
     return ref.once("value");
   }
 
@@ -152,7 +160,7 @@ class App extends React.Component {
     if (!reset) {
       this.count++;
     } else {
-      this.writePlayerScore(this.state.username,this.count);
+      this.writePlayerHighscore(this.state.username,this.count);
       this.updateLeaderboard();
       this.count = 0;
     }
